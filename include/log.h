@@ -1,5 +1,5 @@
-#ifndef __ERRS__
-#define __ERRS__
+#ifndef __LOG__
+#define __LOG__
 
 #include "common.h"
 
@@ -9,4 +9,4 @@ typedef struct {
 void
 log_err(ret_t r, ...);
 
-#endif //__ERRS__
+#endif /*__LOG__*/

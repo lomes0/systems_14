@@ -1,5 +1,5 @@
-#include "include/asm.h"
-#include "include/log.h"
+#include "asm.h"
+#include "log.h"
 
 static void
 asm_parse_lines(asm_t* a, log_t* l)

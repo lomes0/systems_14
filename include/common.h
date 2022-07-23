@@ -11,4 +11,4 @@ typedef enum {
 	RET_MEM_FAULT = 0x3,
 } ret_t;
 
-#endif // __COMMON__
+#endif /* __COMMON__ */

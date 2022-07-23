@@ -4,4 +4,4 @@
 typedef struct {
 } asm_pre_t;
 
-#endif // __ASM_PRE__
+#endif /* __ASM_PRE__ */
