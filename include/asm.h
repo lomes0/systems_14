@@ -1,9 +1,4 @@
-#ifndef __ASSEMBLER__
-#define __ASSEMBLER__
+#ifndef __ASM__
+#define __ASM__
 
-#include "errs.h"
-
-int
-assemble(const char* p, errs_t* e);
-
-#endif //__ASSEMBLER__
+#endif // __ASM__

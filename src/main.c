@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
 #include "include/log.h"
-#include "include/assembler.h"
+#include "include/asm_sh.h"
 
 //	Registers
 //		General: r0,...,r7
@@ -88,20 +88,24 @@ valid_args(int argc, const char** argv, log_t* l)
 
 	return 0;
 }
+//	if (!valid_args(argc - 1, argv + 1, &l)) {
+//		log_flush(&l);
+//		return EXIT_FAILURE;
+//	}
+
 
 int
 main(int argc, const char** argv)
 {
 	log_t l;
 	log_init(&l);
+	int ret;
 
-	if (!valid_args(argc - 1, argv + 1, &l)) {
-		log_flush(&l);
-		return EXIT_FAILURE;
-	}
+	asm_sh(argc - 1, argv + 1, &l);
 
-	asm_run(argc - 1, argv + 1, &l);
+	ret = log_has_fatal(&l) ? EXIT_FAILURE : EXIT_SUCCESS;
+
 	log_flush(&l);
 
-	return EXIT_SUCCESS;
+	return ret;
 }

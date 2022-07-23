@@ -1,12 +1,12 @@
 #ifndef __ERRS__
 #define __ERRS__
 
-#include "common.h"
+#include "include/common.h"
 
 typedef struct {
-} errs_t;
+} log_t;
 
 void
-errs_register(ret_t r, ...);
+log_err(ret_t r, ...);
 
 #endif //__ERRS__
