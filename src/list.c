@@ -3,9 +3,9 @@
 #include <alloca.h>
 #include <string.h>
 
-#include "include/list.h"
-#include "include/scanner.h"
-#include "include/common.h"
+#include "list.h"
+#include "scanner.h"
+#include "common.h"
 
 void
 list_add(list_t* list, char* val)
@@ -27,24 +27,24 @@ list_add(list_t* list, char* val)
 		}
 		case 1:
 		{
-			l->last = node;
-			l->last->next = NULL;
-			l->last->prev = l->head;
-			l->head->next = l->last;
+			list->last = node;
+			list->last->next = NULL;
+			list->last->prev = list->head;
+			list->head->next = list->last;
 		}
 		default:
 		{
 			node_t* curr;
-			curr = l->last;
-			curr->next    = node;
-			l->last       = node;
-			l->last->prev = curr;
-			l->last->next = NULL;
+			curr = list->last;
+			curr->next       = node;
+			list->last       = node;
+			list->last->prev = curr;
+			list->last->next = NULL;
 			break;
 		}
 	}
 
-	l->len++;
+	list->len++;
 }
 
 node_t*
@@ -82,7 +82,7 @@ list_load_from_file(list_t* list, const char* p, log_t* l)
 		ret = scanner_next_line(&s, &line);
 
 		if (ret != RET_OK && ret != RET_EOF) {
-			list_clear(l);
+			list_free(list);
 			scanner_free(&s);
 			//TODO::log err
 			return -1;
@@ -91,7 +91,7 @@ list_load_from_file(list_t* list, const char* p, log_t* l)
 		/*
 		 * append line to list.
 		 */
-		list_add(l, line);
+		list_add(listist, line);
 
 	} while (ret != RET_EOF);
 

@@ -1,7 +1,7 @@
 #include "asm.h"
 #include "log.h"
 
-static void
+void
 asm_parse_lines(asm_t* a, log_t* l)
 {
 	// run line by line.
@@ -15,7 +15,7 @@ asm_parse_lines(asm_t* a, log_t* l)
 	//
 }
 
-static void
+void
 asm_store_labels(asm_t* a, log_t* l)
 {
 }

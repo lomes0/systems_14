@@ -13,6 +13,7 @@ typedef struct node_d {
 typedef struct {
 	unsigned int len;
 	node_t* head;
+	node_t* last;
 } list_t;
 
 /*
@@ -31,7 +32,7 @@ list_next(node_t* n);
  * init with file path lines.
  */
 int
-list_load_from_file(list_t* l, const char* p, log_t* l);
+list_load_from_file(list_t* list, const char* p, log_t* l);
 
 /*
  * init procedure.

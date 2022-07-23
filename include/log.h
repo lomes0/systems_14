@@ -4,9 +4,19 @@
 #include "common.h"
 
 typedef struct {
+	int a;
 } log_t;
 
-void
-log_err(ret_t r, ...);
+void log_warn(ret_t r, ...);
+
+void log_err(ret_t r, ...);
+
+void log_fatal(ret_t r, ...);
+
+int log_has_fatal(log_t* l);
+
+void log_flush(log_t* l);
+
+void log_init(log_t* l);
 
 #endif /*__LOG__*/

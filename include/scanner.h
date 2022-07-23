@@ -17,7 +17,7 @@ typedef struct {
 /*
  * Simple init procedure.
  */
-void scanner_init(scanner_t* scanner, FILE* file);
+void scanner_init(scanner_t* scanner, const char* p);
 
 /*
  * Simple free procedure.

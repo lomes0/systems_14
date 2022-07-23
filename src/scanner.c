@@ -51,22 +51,22 @@ scanner_read_k(FILE* file, char* buffer, size_t bytes_max)
 }
 
 static int
-scanner_read(scanner_t* scanner, int max)
+scanner_read(scanner_t* s, int max)
 {
-	char* next_char_p = ((char*)scanner->buffer) + scanner->bytes_size;
+	char* next_char_p = ((char*)s->buffer) + s->bytes_size;
 
-	size_t bytes_red = scanner_read_k(scanner->file, next_char_p, max);
+	size_t bytes_red = scanner_read_k(s->file, next_char_p, max);
 
-	scanner->bytes_size += bytes_red;
-	scanner->bytes_free -= bytes_red;
+	s->bytes_size += bytes_red;
+	s->bytes_free -= bytes_red;
 
 	return bytes_red;
 }
 
 static int
-scanner_read_char(scanner_t* scanner)
+scanner_read_char(scanner_t* s)
 {
-	return scanner_read(scanner, 1);
+	return scanner_read(s, 1);
 }
 
 ret_t
@@ -124,16 +124,17 @@ scanner_next_line(scanner_t* s, char** line_ptr)
 }
 
 void
-scanner_init(scanner_t* scanner, FILE* file)
+scanner_init(scanner_t* s, const char* p)
 {
-	scanner->bytes_size = 0;
-	scanner->bytes_free = 0;
-	scanner->file       = file;
-	scanner->buffer     = NULL;
+	//TODO:: try load path
+	s->bytes_size = 0;
+	s->bytes_free = 0;
+	s->file       = NULL;
+	s->buffer     = NULL;
 }
 
 void
-scanner_free(scanner_t* scanner)
+scanner_free(scanner_t* s)
 {
-	free(scanner->buffer);
+	free(s->buffer);
 }
