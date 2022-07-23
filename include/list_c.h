@@ -1,17 +1,17 @@
-#ifndef __LIST__
-#define __LIST__
+#ifndef __LIST_C__
+#define __LIST_C__
 
 #include "common.h"
 
 typedef struct node_d {
 	char* ptr;
-	struct node_d* prev;
 	struct node_d* next;
 } node_t;
 
 typedef struct {
 	unsigned int len;
 	node_t* head;
+	node_t* last;
 } list_t;
 
 /*
@@ -33,15 +33,21 @@ ret_t
 list_from_path(list_t* l, const char* p);
 
 /*
- * append node with value val.
+ * aapend value procedure.
  */
 void
 list_add(list_t* l, char* val);
 
 /*
- * get next node from list.
+ * retrive next node procedure.
  */
 node_t*
 list_next(node_t* n);
+
+/*
+ * aligned print.
+ */
+void
+list_print_pretty(list_t* l);
 
 #endif

@@ -29,7 +29,7 @@ asm_sh_pre_asm(asm_pre_t* asm_pre, const char* p, log_t* l)
 int
 asm_sh(int argc, const char** argv, log_t* l)
 {
-	asm_pre_t* asm_pre = alloca(sizeof(asm_pre_t));
+	asm_pre_t* asm_pre = alloca(sizeof(asm_pre_t) * argc);
 
 	/*
 	 * Run pre-assembler.

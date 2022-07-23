@@ -1,7 +1,7 @@
 #ifndef __ERRS__
 #define __ERRS__
 
-#include "include/common.h"
+#include "common.h"
 
 typedef struct {
 } log_t;
