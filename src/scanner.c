@@ -126,7 +126,9 @@ scanner_next_line(scanner_t* s, char** line_ptr)
 void
 scanner_init(scanner_t* s, const char* p)
 {
-	//TODO:: try load path
+	/*
+	 * TODO:: TRY LOAD PATH
+	 */
 	s->bytes_size = 0;
 	s->bytes_free = 0;
 	s->file       = NULL;

@@ -4,6 +4,6 @@
 #include "log.h"
 
 int
-asm_runner(int argc, const char** argv, log_t* l);
+asm_runner(const char** paths, int num_files, log_t* l);
 
 #endif /* __ASM_RUNNER__ */

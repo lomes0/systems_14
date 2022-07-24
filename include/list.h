@@ -3,16 +3,11 @@
 
 #include "common.h"
 #include "log.h"
-
-typedef struct node_d {
-	char* ptr;
-	struct node_d* prev;
-	struct node_d* next;
-} node_t;
+#include "node.h"
 
 typedef struct {
 	unsigned int len;
-	node_t* head;
+	node_t* first;
 	node_t* last;
 } list_t;
 
@@ -20,7 +15,7 @@ typedef struct {
  * append node with value val.
  */
 void
-list_add(list_t* l, char* val);
+list_append(list_t* l, char* val);
 
 /*
  * get next node from list.
@@ -28,22 +23,28 @@ list_add(list_t* l, char* val);
 node_t*
 list_next(node_t* n);
 
+node_t*
+list_get_head(list_t* list);
+
+node_t*
+list_get_last(list_t* list);
+
 /*
  * init with file path lines.
  */
-int
-list_load_from_file(list_t* list, const char* p, log_t* l);
-
-/*
- * init procedure.
- */
-void
-list_init(list_t* l);
+ret_t
+list_from_file(list_t* list, const char* p, log_t* l);
 
 /*
  * free procedure.
  */
 void
 list_free(list_t* l);
+
+/*
+ * init procedure.
+ */
+void
+list_init(list_t* l);
 
 #endif /*__LIST__*/

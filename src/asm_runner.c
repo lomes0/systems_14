@@ -18,51 +18,67 @@ asm_runner_asm(asm_pre_t* asm_pre, log_t* l)
 	return 0;
 }
 
-static int
-asm_runner_pre_asm(asm_pre_t* asm_pre, log_t* l)
-{
-	asm_pre_save_macros(asm_pre, l);
-
-	asm_pre_expend_macros(asm_pre, l);
-
-	asm_pre_write_file(asm_pre, l);
-
-	return 0;
-}
+//static int
+//asm_runner_pre_asm(asm_pre_t* asm_pre, log_t* l)
+//{
+//	asm_pre_store_macros(asm_pre, l);
+//
+//	asm_pre_expend_macros(asm_pre, l);
+//
+//	asm_pre_write_file(asm_pre, l);
+//
+//	return 0;
+//}
 
 int
-asm_runner(int argc, const char** argv, log_t* l)
+asm_runner(const char** paths, int num_files, log_t* l)
 {
-	int i;
-	asm_pre_t* asm_pre = alloca(sizeof(asm_pre_t) * argc);
+	int i; asm_pre_t* asm_pre_arr;
+
+	asm_pre_arr = alloca(sizeof(asm_pre_t) * num_files);
 
 	/*
 	 * Run pre-assembler.
 	 */
-	for (i = 0; i < argc; ++i) {
-		asm_pre_init(asm_pre + i, *(argv + i), l);
+	for (i = 0; i < num_files; ++i) {
+		const char* p = paths[i];
+		asm_pre_t* a = &(asm_pre_arr[i]);
 
-		/*
-		 * No point to move ahead on fatal errors (e.g file is unreadable).
-		 */
-		if (log_has_fatal(l)) {
-			return -1;
-		}
+		log_set_context(l, p);
 
-		asm_runner_pre_asm(asm_pre + i, l);
+		if (asm_pre_init(a, p, l) == 0) {
 
-		/*
-		 * No point to move ahead on fatal errors (e.g failure to expend macros).
-		 */
-		if (log_has_fatal(l)) {
-			return -1;
+			asm_pre_sheldi(a, l);
 		}
 	}
 
+	//----------------------------------------------------------------------------------------
+
+	/*
+	 * Abstain from writes upon fatal errors.
+	 */
+	if (log_has_fatal(l)) {
+		return -1;
+	}
+
+	/*
+	 * TODO::write pre assembler files...
+	 */
+	for (i = 0; i < num_files; ++i) {
+	}
+
+
+
+
+	//----------------------------------------------------------------------------------------
 	/*
 	 * Run assembler.
 	 */
-	for (i = 0; i < argc; ++i) {
+	for (i = 0; i < num_files; ++i) {
+		const char* p = paths[i];
+
+		log_set_context(l, p);
+
 		asm_runner_asm(asm_pre + i, l);
 	
 		if (log_has_fatal(l)) {

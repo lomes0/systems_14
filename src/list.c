@@ -8,7 +8,7 @@
 #include "common.h"
 
 void
-list_add(list_t* list, char* val)
+list_add(list_t* list, void* val)
 {
 	node_t* node = malloc(sizeof(node_t));
 	node->ptr    = val;
@@ -65,8 +65,8 @@ list_next(node_t* n)
 	return n->next;
 }
 
-int
-list_load_from_file(list_t* list, const char* p, log_t* l)
+ret_t
+list_from_file(list_t* list, const char* p, log_t* l)
 {
 	ret_t ret;
 	scanner_t s;
@@ -85,19 +85,19 @@ list_load_from_file(list_t* list, const char* p, log_t* l)
 			list_free(list);
 			scanner_free(&s);
 			//TODO::log err
-			return -1;
+			return ret;
 		}
 
 		/*
 		 * append line to list.
 		 */
-		list_add(listist, line);
+		list_add(list, line);
 
 	} while (ret != RET_EOF);
 
 	scanner_free(&s);
 
-	return 0;
+	return RET_OK;
 }
 
 void

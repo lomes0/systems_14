@@ -17,6 +17,8 @@ int log_has_fatal(log_t* l);
 
 void log_flush(log_t* l);
 
+void log_set_context(log_t* l, const char* p);
+
 void log_init(log_t* l);
 
 #endif /*__LOG__*/
