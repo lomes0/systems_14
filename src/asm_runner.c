@@ -33,7 +33,7 @@ asm_runner_asm(asm_pre_t* asm_pre, log_t* l)
 int
 asm_runner(const char** paths, int num_files, log_t* l)
 {
-	int i; asm_pre_t* asm_pre_arr;
+	asm_pre_t* asm_pre_arr; int i;
 
 	asm_pre_arr = alloca(sizeof(asm_pre_t) * num_files);
 

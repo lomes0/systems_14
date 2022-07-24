@@ -123,13 +123,13 @@ asm_pre_sheldi(asm_pre_t* a, log_t* l)
 	//  - macro table: macro name, a list of line_t, composing the macro.
 
 static line_t*
-asm_pre_parse_line(asm_pre_t* a, const char* line_c, log_t* l)
+asm_pre_create_line(asm_pre_t* a, const char* line_c, log_t* l)
 {
 	char (*segments)[LINE_SEG_MAX];
 
 	strings_break_by_whites((char**)segments, LINE_SEG_MAX, line_c);
 
-	return lines_create_line(segments);
+	return line_create(segments);
 }
 
 static void
@@ -141,7 +141,7 @@ asm_pre_init_lines(asm_pre_t* a, list_t* lines_c, log_t* l)
 
 	list_foreach(lines_c, n, (const char*), line_c) {
 
-		line_t* line = asm_pre_parse_line(a, line_c, l);
+		line_t* line = asm_pre_create_line(a, line_c, l);
 
 		if (line_is_white(line) ||
 		    line_is_cmt(line)) {

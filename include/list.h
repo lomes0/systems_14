@@ -6,20 +6,17 @@
 #include "node.h"
 
 typedef struct {
-	unsigned int len;
-	node_t* first;
+	node_t* head;
 	node_t* last;
+	int len;
 } list_t;
 
-/*
- * append node with value val.
- */
 void
-list_append(list_t* l, char* val);
+list_append(list_t* l, node_t* n);
 
-/*
- * get next node from list.
- */
+void
+list_replace(list_t* list, node_t* p, node_t* s, node_t* e, int size);
+
 node_t*
 list_next(node_t* n);
 
@@ -29,21 +26,12 @@ list_get_head(list_t* list);
 node_t*
 list_get_last(list_t* list);
 
-/*
- * init with file path lines.
- */
 ret_t
 list_from_file(list_t* list, const char* p, log_t* l);
 
-/*
- * free procedure.
- */
 void
 list_free(list_t* l);
 
-/*
- * init procedure.
- */
 void
 list_init(list_t* l);
 

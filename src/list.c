@@ -8,17 +8,14 @@
 #include "common.h"
 
 void
-list_add(list_t* list, void* val)
+list_append(list_t* list, node_t* n)
 {
-	node_t* node = malloc(sizeof(node_t));
-	node->ptr    = val;
-
 	switch (list->len)
 	{
 		case 0:
 		{
-			list->head = node;
-			list->last = node;
+			list->head = n;
+			list->last = n;
 			list->head->prev = NULL;
 			list->head->next = NULL;
 			list->last->prev = NULL;
@@ -27,7 +24,7 @@ list_add(list_t* list, void* val)
 		}
 		case 1:
 		{
-			list->last = node;
+			list->last = n;
 			list->last->next = NULL;
 			list->last->prev = list->head;
 			list->head->next = list->last;
@@ -36,8 +33,8 @@ list_add(list_t* list, void* val)
 		{
 			node_t* curr;
 			curr = list->last;
-			curr->next       = node;
-			list->last       = node;
+			curr->next       = n;
+			list->last       = n;
 			list->last->prev = curr;
 			list->last->next = NULL;
 			break;
@@ -45,6 +42,36 @@ list_add(list_t* list, void* val)
 	}
 
 	list->len++;
+}
+
+void
+list_replace(list_t* list, node_t* p, node_t* s, node_t* e, int size)
+{
+	node_t* before = p->prev;
+	node_t* after  = p->next;
+
+	s->prev = before;
+	e->next = after;
+
+	if (before != NULL) {
+		before->next = s;
+	}
+
+	if (after != NULL) {
+		after->prev = e;
+	}
+
+	list->len += size;
+}
+
+void
+list_append_val(list_t* list, void* ptr)
+{
+	node_t* n = malloc(sizeof(node_t));
+
+	n->ptr = ptr;
+
+	list_append(list, n);
 }
 
 node_t*
@@ -91,7 +118,7 @@ list_from_file(list_t* list, const char* p, log_t* l)
 		/*
 		 * append line to list.
 		 */
-		list_add(list, line);
+		list_append_val(list, line);
 
 	} while (ret != RET_EOF);
 
