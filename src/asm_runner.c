@@ -74,17 +74,17 @@ asm_runner(const char** paths, int num_files, log_t* l)
 	/*
 	 * Run assembler.
 	 */
-	for (i = 0; i < num_files; ++i) {
-		const char* p = paths[i];
-
-		log_set_context(l, p);
-
-		asm_runner_asm(asm_pre + i, l);
-	
-		if (log_has_fatal(l)) {
-			return -1;
-		}
-	}
+//	for (i = 0; i < num_files; ++i) {
+//		const char* p = paths[i];
+//
+//		log_set_context(l, p);
+//
+//		asm_runner_asm(asm_pre + i, l);
+//	
+//		if (log_has_fatal(l)) {
+//			return -1;
+//		}
+//	}
 
 	return 0;
 }

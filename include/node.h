@@ -7,10 +7,7 @@ typedef struct node_d {
 	struct node_d* next;
 } node_t;
 
-void*
-node_get_ptr(node_t* node)
-{
-	return node->ptr;
-}
+//void*
+//node_get_ptr(node_t* node);
 
 #endif /* __NODE__ */

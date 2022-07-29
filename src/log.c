@@ -1,5 +1,10 @@
 #include "log.h"
 
+void
+log_set_context(log_t* l, const char* p)
+{
+}
+
 int
 log_has_fatal(log_t* l)
 {

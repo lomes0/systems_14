@@ -45,23 +45,26 @@ list_append(list_t* list, node_t* n)
 }
 
 void
-list_replace(list_t* list, node_t* p, node_t* s, node_t* e, int size)
+list_replace(list_t* list, node_t* p, list_t* in)
 {
 	node_t* before = p->prev;
 	node_t* after  = p->next;
 
-	s->prev = before;
-	e->next = after;
+	node_t* start  = in->head;
+	node_t* end    = in->last;
+
+	start->prev = before;
+	end->next = after;
 
 	if (before != NULL) {
-		before->next = s;
+		before->next = start;
 	}
 
 	if (after != NULL) {
-		after->prev = e;
+		after->prev = end;
 	}
 
-	list->len += size;
+	list->len += in->len;
 }
 
 void

@@ -15,7 +15,7 @@ void
 list_append(list_t* l, node_t* n);
 
 void
-list_replace(list_t* list, node_t* p, node_t* s, node_t* e, int size);
+list_replace(list_t* list, node_t* p, list_t* in);
 
 node_t*
 list_next(node_t* n);

@@ -14,6 +14,7 @@ typedef struct {
 	//label
 	//data segments[]
 	//int num_segments;
+	int a;
 } line_data_t;
 
 int line_is_white(line_t* line);
@@ -30,7 +31,7 @@ line_t* line_create(char (*segments)[LINE_SEG_MAX]);
 
 
 
-void lines_replace(lines_t* lines, line_t* p, line_t* s, line_t* e, int size);
+void lines_replace(lines_t* lines, line_t* p, lines_t* in);
 
 line_t* lines_first(lines_t* lines);
 

@@ -65,14 +65,14 @@ asm_pre_macro_get_body(asm_pre_t* a, line_t* name)
 }
 
 static line_t*
-asm_pre_replace_macro(asm_pre_t* a, line_t* name)
+asm_pre_replace_macro(asm_pre_t* a, line_t* macro)
 {
 	/*TODO:: log err if macro is not exists..*/
-	lines_t* body = asm_pre_macro_get_body(a, name);
+	lines_t* body = asm_pre_macro_get_body(a, macro);
 
-	lines_replace(name, body->first, body->last);
+	lines_replace(&a->lines, macro, body);
 
-	free(name);
+	free(macro);
 
 	return body->last;
 }
@@ -125,7 +125,7 @@ asm_pre_sheldi(asm_pre_t* a, log_t* l)
 static line_t*
 asm_pre_create_line(asm_pre_t* a, const char* line_c, log_t* l)
 {
-	char (*segments)[LINE_SEG_MAX];
+	char (*segments)[LINE_SEG_MAX] = {0};
 
 	strings_break_by_whites((char**)segments, LINE_SEG_MAX, line_c);
 
@@ -139,7 +139,7 @@ asm_pre_init_lines(asm_pre_t* a, list_t* lines_c, log_t* l)
 
 	lines_init(&a->lines);
 
-	list_foreach(lines_c, n, (const char*), line_c) {
+	list_foreach(lines_c, n, const char*, line_c) {
 
 		line_t* line = asm_pre_create_line(a, line_c, l);
 
