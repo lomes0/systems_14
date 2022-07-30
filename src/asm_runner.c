@@ -18,18 +18,6 @@ asm_runner_asm(asm_pre_t* asm_pre, log_t* l)
 	return 0;
 }
 
-//static int
-//asm_runner_pre_asm(asm_pre_t* asm_pre, log_t* l)
-//{
-//	asm_pre_store_macros(asm_pre, l);
-//
-//	asm_pre_expend_macros(asm_pre, l);
-//
-//	asm_pre_write_file(asm_pre, l);
-//
-//	return 0;
-//}
-
 int
 asm_runner(const char** paths, int num_files, log_t* l)
 {
@@ -42,7 +30,7 @@ asm_runner(const char** paths, int num_files, log_t* l)
 	 */
 	for (i = 0; i < num_files; ++i) {
 		const char* p = paths[i];
-		asm_pre_t* a = &(asm_pre_arr[i]);
+		asm_pre_t*  a = &(asm_pre_arr[i]);
 
 		log_set_context(l, p);
 

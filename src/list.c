@@ -114,7 +114,7 @@ list_from_file(list_t* list, const char* p, log_t* l)
 		if (ret != RET_OK && ret != RET_EOF) {
 			list_free(list);
 			scanner_free(&s);
-			//TODO::log err
+			log_err(l, "%s", "scanner next line failed.");
 			return ret;
 		}
 

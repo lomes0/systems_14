@@ -12,9 +12,8 @@ typedef node_t line_t;
 typedef struct {
 	//metadata (type of line
 	//label
-	//data segments[]
-	//int num_segments;
-	int a;
+	char** segs;
+	int seg_num;
 } line_data_t;
 
 int line_is_white(line_t* line);
@@ -23,11 +22,17 @@ int line_is_cmt(line_t* line);
 
 int line_is_macro_def(line_t* line);
 
+int line_is_macro_end(line_t* line);
+
 int line_is_single_word(line_t* line);
 
-const char* line_get_word_i(line_t* line, int i);
+const char* line_word_i(line_t* line, int i);
 	
-line_t* line_create(char (*segments)[LINE_SEG_MAX]);
+line_t* line_create(char** segs, int seg_num);
+
+line_t* line_copy(line_t* orig);
+
+void line_free(line_t* line);
 
 
 
@@ -36,6 +41,8 @@ void lines_replace(lines_t* lines, line_t* p, lines_t* in);
 line_t* lines_first(lines_t* lines);
 
 void lines_append(lines_t* lines, line_t* line);
+
+void lines_free(lines_t* lines);
 
 void lines_init(lines_t* lines);
 

@@ -1,113 +1,90 @@
 #include <stdlib.h>
 
 #include "asm_pre.h"
-#include "scanner.h"
 #include "list.h"
 #include "log.h"
 #include "strings.h"
 
-#define MACRO_STR "macro"
-
-#define asm_pre_foreach(lines, n) \
-	for (n = list_get_head(lines); n != list_get_last(lines); list_next(n))
-
 #define list_foreach(list, n, type, val) \
 	for (n = list->head, val = (type)n->ptr; n->next != NULL; n = n->next)
 
-	//     - properly parse lines.
-	//       - create a list of parsed lines.
-	//             - add a functionaly: parsed line 2 raw line
-
-
-//static char*
-//asm_pre_test_macro_def(const char* line, log_t* l)
-//{
-//	if (!string_has_prefix(line, MACRO_STR)) {
-//		return NULL;
-//	}
-//
-//	//if (string_p
-//
-//	return NULL;
-//}
-
-static line_t*
-asm_pre_try_store_macro(asm_pre_t* a, line_t* line, log_t* l)
+static void
+asm_pre_expend_macro(asm_pre_t* a, line_t* head)
 {
-	//TODO: the only fatal is a nested macro.
-	return NULL;
-}
-
-//static void
-//asm_pre_try_store_macro(asm_pre_t* a, char* macro, char* macro_body)
-//{
-//}
-//
-//void
-//asm_pre_store_macros(asm_pre_t* a, log_t* l)
-//{
-//}
-//
-//void
-//asm_pre_expend_macros(asm_pre_t* asm_pre, log_t* l)
-//{
-//}
-//
-//void
-//asm_pre_write_file(asm_pre_t* asm_pre, log_t* l)
-//{
-//}
-
-static lines_t*
-asm_pre_macro_get_body(asm_pre_t* a, line_t* name)
-{
-	return NULL;
-}
-
-static line_t*
-asm_pre_replace_macro(asm_pre_t* a, line_t* macro)
-{
-	/*TODO:: log err if macro is not exists..*/
-	lines_t* body = asm_pre_macro_get_body(a, macro);
-
-	lines_replace(&a->lines, macro, body);
-
-	free(macro);
-
-	return body->last;
+	line_t* line;
+	lines_t* body = macros_body(&a->macros, head);
+	
+	for (line = lines_first(body); line != NULL; line = line->next) {
+		lines_append(&a->lines_out, line_copy(line));
+	}
 }
 
 static int
-asm_pre_has_macro(asm_pre_t* a, const char* word)
+asm_pre_known_macro(asm_pre_t* a, line_t* head)
 {
-	/* TODO::IMPL */
-	return 0;
-}
-
-static int
-asm_pre_known_macro(asm_pre_t* a, line_t* line)
-{
-	const char* word;
-
-	if (!line_is_single_word(line)) {
+	if (!line_is_single_word(head)) {
 		return 0;
 	}
 
-	word = line_get_word_i(line, 0);
+	return macros_has(&a->macros, head);
+}
 
-	return asm_pre_has_macro(a, word);
+static line_t*
+asm_pre_try_store_macro(asm_pre_t* a, line_t* head, log_t* l)
+{
+	const char* macro_name;
+	lines_t* body = malloc(sizeof(lines_t));
+	line_t* next = head->next;
+	line_t* curr;
+
+	macro_name = line_word_i(head, 1);
+	lines_init(body);
+
+	/* forbid repeating macros. */
+	if (asm_pre_known_macro(a, head)) {
+		lines_free(body);
+		log_err(l, "macro double defenition [macro=%s]", macro_name);
+		return NULL;
+	}
+
+	while (next != NULL) {
+		curr = next;
+
+		/* forbid nested macros. */
+		if (line_is_macro_def(curr)) {
+			log_err(l, "macro nested macro defenition [macro=%s]", macro_name);
+			lines_free(body);
+			return NULL;
+		}
+
+		if (line_is_macro_end(curr)) {
+			macros_store(&a->macros, head, body);
+			return curr;
+		}
+
+		next = curr->next;
+		lines_append(body, curr);
+	}
+
+	lines_free(body);
+	log_err(l, "macro missing end statement [macro=%s]", macro_name);
+
+	return NULL;
 }
 
 void
 asm_pre_sheldi(asm_pre_t* a, log_t* l)
 {
-	line_t* line = lines_first(&a->lines);
+	line_t* line;
+	lines_t* out = &a->lines_out;
+	line_t* next = lines_first(&a->lines);
 
-	for (; line->next != NULL; line = line->next) {
+	while (next != NULL) {
+		line = next;
 		
 		/* a known macro usage? */
 		if (asm_pre_known_macro(a, line)) {
-			line = asm_pre_replace_macro(a, line);
+			asm_pre_expend_macro(a, line);
 			continue;
 		}
 
@@ -116,20 +93,27 @@ asm_pre_sheldi(asm_pre_t* a, log_t* l)
 			line = asm_pre_try_store_macro(a, line, l);
 			continue;
 		}
+
+		next = line->next;
+		lines_append(out, line);
 	}
 }
-
-	// pre-assembler
-	//  - macro table: macro name, a list of line_t, composing the macro.
 
 static line_t*
 asm_pre_create_line(asm_pre_t* a, const char* line_c, log_t* l)
 {
+	int seg_num;
 	char (*segments)[LINE_SEG_MAX] = {0};
+	char delims[3];
 
-	strings_break_by_whites((char**)segments, LINE_SEG_MAX, line_c);
+	delims[0] = CHAR_SPACE;
+	delims[1] = CHAR_TAB;
+	delims[3] = CHAR_COMMA;
+	delims[4] = CHAR_NULL;
 
-	return line_create(segments);
+	seg_num = strings_break_by((char**)segments, LINE_SEG_MAX, line_c, delims);
+
+	return line_create((char**)segments, seg_num);
 }
 
 static void
@@ -146,7 +130,7 @@ asm_pre_init_lines(asm_pre_t* a, list_t* lines_c, log_t* l)
 		if (line_is_white(line) ||
 		    line_is_cmt(line)) {
 
-			free(line);
+			line_free(line);
 			continue;
 		}
 
