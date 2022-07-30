@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <sys/types.h>
 
+#include "log.h"
+#include "str.h"
 #include "common.h"
 
 typedef struct {
@@ -17,7 +19,7 @@ typedef struct {
 /*
  * Simple init procedure.
  */
-void scanner_init(scanner_t* scanner, const char* p);
+void scanner_init(scanner_t* scanner, const char* p, log_t* l);
 
 /*
  * Simple free procedure.
@@ -27,6 +29,6 @@ void scanner_free(scanner_t* scanner);
 /*
  * Load next line from file.
  */
-ret_t scanner_next_line(scanner_t* scanner, char** line_ptr);
+ret_t scanner_next_line(scanner_t* scanner, str_t* str_p, log_t* l);
 
 #endif /* __SCANNER__ */

@@ -31,7 +31,7 @@ lines_init(lines_t* lines)
 lines_t*
 lines_create()
 {
-	lines_t* lines = malloc(sizeof(lines_t));
+	lines_t* lines = (lines_t*) malloc(sizeof(lines_t));
 	lines_init(lines);
 
 	return lines;

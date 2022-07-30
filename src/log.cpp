@@ -92,9 +92,9 @@ log_flush(log_t* l)
 void
 log_init(log_t* l)
 {
-	l->flags = 0;
-	l->ctx = "";
+	l->flags = (state_t) 0;
+	l->ctx = "default";
 	l->bytes_free = 2 * LOG_BLOCK_SIZE;
 	l->bytes_used = 0;
-	l->buff = calloc(2, l->bytes_free);
+	l->buff = (char*) calloc(2, l->bytes_free);
 }

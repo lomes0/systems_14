@@ -5,25 +5,25 @@
 #include "list.h"
 #include "scanner.h"
 
-static int
-asm_runner_asm(asm_pre_t* asm_pre, log_t* l)
-{
-	asm_t a;
-
-	asm_parse_lines(&a, l);
-
-	/* storing labels to symbol tables. */
-	asm_store_labels(&a, l);
-
-	return 0;
-}
+//static int
+//asm_runner_asm(asm_pre_t* asm_pre, log_t* l)
+//{
+//	asm_t a;
+//
+//	asm_parse_lines(&a, l);
+//
+//	/* storing labels to symbol tables. */
+//	asm_store_labels(&a, l);
+//
+//	return 0;
+//}
 
 int
 asm_runner(const char** paths, int num_files, log_t* l)
 {
-	asm_pre_t* asm_pre_arr; int i;
+	 int i;
 
-	asm_pre_arr = alloca(sizeof(asm_pre_t) * num_files);
+    asm_pre_t* asm_pre_arr = (asm_pre_t*) alloca(sizeof(asm_pre_t) * num_files);
 
 	/*
 	 * Run pre-assembler.
@@ -54,8 +54,6 @@ asm_runner(const char** paths, int num_files, log_t* l)
 	 */
 	for (i = 0; i < num_files; ++i) {
 	}
-
-
 
 
 	//----------------------------------------------------------------------------------------

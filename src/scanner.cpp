@@ -1,24 +1,20 @@
-#include <string.h>
 #include <stdlib.h>
 #include <strings.h>
 
-#include "common.h"
 #include "scanner.h"
+#include "common.h"
 
 static size_t bytes_block_size = 0x40;
 
 static ret_t
-scanner_alloc(scanner_t* scanner)
+scanner_alloc(scanner_t* scanner, log_t* l)
 {
 	size_t bytes_size = scanner->bytes_size;
-	void** buffer_p   = (void**)&scanner->buffer;
 
-	*buffer_p = realloc(*buffer_p, bytes_size +
-	                               bytes_block_size);
+    scanner->buffer = (char*)realloc(scanner->buffer, bytes_size + bytes_block_size);
 
-	if (*buffer_p == NULL) {
-
-		fprintf(stderr, "realloc failed.");
+	if (scanner->buffer == NULL) {
+		log_err(l, "scanner alloc failure.");
 		return RET_MEM_FAULT;
 	}
 
@@ -70,31 +66,29 @@ scanner_read_char(scanner_t* s)
 }
 
 ret_t
-scanner_next_line(scanner_t* s, char** line_ptr)
+scanner_next_line(scanner_t* s, str_t* str_p, log_t* l)
 {
 	ret_t ret;
 
-	*line_ptr = NULL;
-	s->bytes_free += s->bytes_size;
-	s->bytes_size  = 0;
+    str_p->c_str = NULL;
+	s->bytes_free = s->bytes_size;
+	s->bytes_size = 0;
 
-	/*
-	 * Skip finished files.
-	 */
+    /* skip readen files. */
 	if (feof(s->file)) {
 		return RET_EOF;
 	}
 
 	do {
 		/*
-		 * Prepare memory for the read.
+		 * Prepare memory.
 		 */
-		if ((ret = scanner_alloc(s)) != RET_OK) {
+		if ((ret = scanner_alloc(s, l)) != RET_OK) {
 			return ret;
 		}
 
 		/*
-		 * Reading char by char, for the sake of simplicty.
+		 * Reading char by char, for the sake of simplicity.
 		 * We will exit upon:
 		 *  - new line char.
 		 *  - eof ~ zero bytes read.
@@ -111,27 +105,32 @@ scanner_next_line(scanner_t* s, char** line_ptr)
 
 	} while (1);
 
-	/**len = scanner->bytes_size - 1;*/
-	*line_ptr = s->buffer;
-	*line_ptr = malloc(s->bytes_size * sizeof(char));
-	memcpy((void*)*line_ptr, (void*)s->buffer, s->bytes_size);
+    str_init_val(str_p, s->buffer);
 
-	if (feof(s->file)) {
-		return RET_EOF;
-	}
+    return feof(s->file) ? RET_EOF : RET_OK;
+}
 
-	return RET_OK;
+static FILE*
+load_path(const char* p, log_t* l)
+{
+    FILE* f = fopen(p, "r");
+
+    //TODO::make sure not dir
+    //TODO::make sure not link
+
+    if (!f) {
+        log_err(l, "failed to read file [p=%s]", p);
+    }
+
+    return f;
 }
 
 void
-scanner_init(scanner_t* s, const char* p)
+scanner_init(scanner_t* s, const char* p, log_t* l)
 {
-	/*
-	 * TODO:: TRY LOAD PATH
-	 */
 	s->bytes_size = 0;
 	s->bytes_free = 0;
-	s->file       = NULL;
+	s->file       = load_path(p, l);
 	s->buffer     = NULL;
 }
 

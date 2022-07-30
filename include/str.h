@@ -1,7 +1,7 @@
 #ifndef __STRH__
 #define __STRH__
 
-#define CHAR_SPACE ('\n')
+#define CHAR_SPACE (' ')
 #define CHAR_TAB   ('\t')
 #define CHAR_COMMA (',')
 #define CHAR_NULL  ('\0')

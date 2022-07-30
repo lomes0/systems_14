@@ -5,9 +5,6 @@
 #include "log.h"
 #include "node.h"
 
-#define list_foreach(list, n, type, val) \
-	for (n = list->head, val = (type)n->ptr; n->next != NULL; n = n->next)
-
 typedef struct {
 	node_t* head;
 	node_t* last;
@@ -23,11 +20,11 @@ list_replace(list_t* list, node_t* p, list_t* in);
 node_t*
 list_next(node_t* n);
 
-node_t*
-list_get_head(list_t* list);
+//node_t*
+//list_get_head(list_t* list);
 
-node_t*
-list_get_last(list_t* list);
+//node_t*
+//list_get_last(list_t* list);
 
 ret_t
 list_from_file(list_t* list, const char* p, log_t* l);

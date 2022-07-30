@@ -1,10 +1,11 @@
 #include <stdlib.h>
-#include <stdio.h>
+//#include <stdio.h>
 #include <alloca.h>
-#include <string.h>
+//#include <string.h>
 
 #include "list.h"
 #include "scanner.h"
+#include "str.h"
 #include "common.h"
 
 void
@@ -70,7 +71,7 @@ list_replace(list_t* list, node_t* p, list_t* in)
 void
 list_append_val(list_t* list, void* ptr)
 {
-	node_t* n = malloc(sizeof(node_t));
+	node_t* n = (node_t*) malloc(sizeof(node_t));
 
 	n->ptr = ptr;
 
@@ -100,34 +101,33 @@ list_from_file(list_t* list, const char* p, log_t* l)
 {
 	ret_t ret;
 	scanner_t s;
+    str_t str;
 
-	scanner_init(&s, p);
+	scanner_init(&s, p, l);
 
 	do {
-		char* line;
-
 		/*
 		 * read next line from stream.
 		 */
-		ret = scanner_next_line(&s, &line);
+		ret = scanner_next_line(&s, &str, l);
 
 		if (ret != RET_OK && ret != RET_EOF) {
 			list_free(list);
-			scanner_free(&s);
-			log_err(l, "%s", "scanner next line failed.");
-			return ret;
+			log_err(l, "%s", "scanner next line failure [ret=%d].", ret);
+			goto out;
 		}
 
 		/*
 		 * append line to list.
 		 */
-		list_append_val(list, line);
+		list_append_val(list, str.c_str);
 
 	} while (ret != RET_EOF);
 
-	scanner_free(&s);
+out:
+    scanner_free(&s);
 
-	return RET_OK;
+	return ret;
 }
 
 void

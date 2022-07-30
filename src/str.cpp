@@ -5,11 +5,10 @@
 #include "str.h"
 
 int
-str_split(str_t** segs_p, const char* line_c, char* delims)
+str_split(str_t** strs_p, const char* line_c, char* delims)
 {
-	str_t* segs = *segs_p;
 	char* cp; int si;
-	segs = NULL;
+	*strs_p = NULL;
 
 	str_t line_d;
 	str_init_val(&line_d, line_c);
@@ -18,9 +17,9 @@ str_split(str_t** segs_p, const char* line_c, char* delims)
 	cp = strtok(line_d.c_str, delims);
 	while (cp != NULL) {
 
-		segs = realloc(segs, sizeof(str_t) * (si + 1));
+		*strs_p = (str_t*) realloc(*strs_p, sizeof(str_t) * (si + 1));
 
-		str_init_val(&segs[si], cp);
+		str_init_val(&(*strs_p)[si], cp);
 
 		cp = strtok(NULL, delims);
 
@@ -33,7 +32,7 @@ str_split(str_t** segs_p, const char* line_c, char* delims)
 void
 str_init_val(str_t* str, const char* c_str)
 {
-	str->c_str = malloc((strlen(c_str) + 1) * sizeof(char));
+	str->c_str = (char*) malloc((strlen(c_str) + 1) * sizeof(char));
 	memcpy(str->c_str, c_str, (strlen(c_str) + 1) * sizeof(char));
 }
 

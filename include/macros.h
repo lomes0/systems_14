@@ -9,10 +9,10 @@ typedef struct {
 	btree_t* table;
 } macros_t;
 
-int macros_has(macros_t* m, line_t* head);
+int macros_has(macros_t* m, str_t head_str);
 
-void macros_store(macros_t* m, line_t* head, lines_t* body);
+void macros_store(macros_t* m, str_t head_str, lines_t* body);
 
-lines_t* macros_body(macros_t* m, line_t* head);
+lines_t* macros_body(macros_t* m, str_t head_str);
 
 #endif /* __MACROS__ */
