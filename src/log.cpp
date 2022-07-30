@@ -1,73 +1,56 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+#include "str.h"
 #include "log.h"
 
-#define LOG_BLOCK_SIZE	(0x40)
+#define ENTRY_MAX_SIZE (0x80)
 
-#define log_sprintf(l, fmt, val)                     \
- do {                                                \
-   char* prev = l->buff + l->bytes_used;             \
-   char* curr = prev;                                \
-   curr += snprintf(curr, LOG_BLOCK_SIZE, fmt, val); \
-   l->bytes_used += ((curr - prev) / sizeof(char));  \
-   l->bytes_free -= ((curr - prev) / sizeof(char));  \
- } while (0)
-
-static void
-log_realloc(log_t* l)
+static str_t
+log_format(const char* fmt, va_list args)
 {
-}
+	char buff[ENTRY_MAX_SIZE];
+	const char* f = fmt;
+	char* p = buff;
+	str_t msg;
 
-static int
-log_low_mem(log_t* l)
-{
-	return l->bytes_free < LOG_BLOCK_SIZE;
-}
+	memcpy(buff, fmt, strlen(fmt) + 1);
 
-static void
-log_append(log_t* l, state_t s, const char* fmt, va_list args)
-{
-	if (log_low_mem(l)) {
-		log_realloc(l);	
-	}
+	while (*f) {
 
-	switch (s)
-	{
-		case STATE_ERR:
-			log_sprintf(l, "%s", "err: ");
-			break;
-		case STATE_WARN:
-			log_sprintf(l, "%s", "warn: ");
-			break;
-		case STATE_FATAL:
-			log_sprintf(l, "%s", "warn: ");
-			break;
-	}
-
-	while (*fmt) {
-
-		if (*fmt == '%') {
-			if (*fmt == 'c') {
-				//char val = (char)va_arg(args, char);
+		if (*f == '%') {
+			f++;
+			if (*f == 's') {
+				char* val = (char*)va_arg(args, char*);
+				p += sprintf(p, p, val);
 			}
-
-			if (*fmt == 'd') {
-				//char val = (int)va_arg(args, int);
+			if (*f == 'd') {
+				int val = (int)va_arg(args, int);
+				p += sprintf(p, p, val);
 			}
 		}
+
+		f++;
 	}
 
+	str_init_val(&msg, buff);
+
+	return msg;
 }
 
 void
 log_err(log_t* l, const char* fmt, ...)
 {
     va_list args;
+    str_t msg;
  
     va_start(args, fmt);
  
-	log_append(l, STATE_ERR, fmt, args);
+	msg = log_format(fmt, args);
+
+	list_append_val(&l->errs, msg.c_str);
 
 	va_end(args);
 }
@@ -79,22 +62,22 @@ log_set_context(log_t* l, const char* p)
 }
 
 int
-log_has_fatal(log_t* l)
+log_has_errs(log_t* l)
 {
-	return (l->flags & STATE_FATAL) != 0;
+	return l->errs.len > 0;
 }
 
 void
 log_flush(log_t* l)
 {
+	// print warns
+	// print errs
 }
 
 void
 log_init(log_t* l)
 {
-	l->flags = (state_t) 0;
 	l->ctx = "default";
-	l->bytes_free = 2 * LOG_BLOCK_SIZE;
-	l->bytes_used = 0;
-	l->buff = (char*) calloc(2, l->bytes_free);
+	list_init(&l->warns);
+	list_init(&l->errs);
 }

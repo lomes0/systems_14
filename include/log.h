@@ -2,28 +2,19 @@
 #define __LOG__
 
 #include "common.h"
-
-typedef enum {
-	STATE_FATAL = 0x1,
-	STATE_ERR   = 0x2,
-	STATE_WARN  = 0x4,
-} state_t;
+#include "list.h"
 
 typedef struct {
-	state_t flags;
 	const char* ctx;
-	int bytes_free;
-	int bytes_used;
-	char* buff;
+	list_t warns;
+	list_t errs;
 } log_t;
-
-void log_warn(log_t* l, const char* fmt, ...);
 
 void log_err(log_t* l, const char* fmt, ...);
 
-void log_fatal(log_t* l, const char* fmt, ...);
+void log_warn(log_t* l, const char* fmt, ...);
 
-int log_has_fatal(log_t* l);
+int log_has_errs(log_t* l);
 
 void log_flush(log_t* l);
 

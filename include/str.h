@@ -10,6 +10,8 @@ typedef struct {
 	char* c_str;
 } str_t;
 
+int str_cmp(str_t a, str_t b);
+
 int str_split(str_t** strs_p, const char* line_c, char* delims);
 
 void str_init_val(str_t* str, const char* c_str);

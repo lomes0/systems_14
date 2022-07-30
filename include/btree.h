@@ -11,7 +11,7 @@ typedef struct bnode_d {
 } bnode_t;
 
 typedef struct {
-	bnode_t root;
+	bnode_t* root;
 } btree_t;
 
 int btree_has(btree_t* tree, str_t key);
