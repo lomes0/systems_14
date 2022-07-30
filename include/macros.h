@@ -15,4 +15,8 @@ void macros_store(macros_t* m, str_t head_str, lines_t* body);
 
 lines_t* macros_body(macros_t* m, str_t head_str);
 
+void macros_free(macros_t* m);
+
+macros_t* macros_create();
+
 #endif /* __MACROS__ */

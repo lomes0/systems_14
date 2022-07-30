@@ -1,7 +1,5 @@
 #include <stdlib.h>
-//#include <stdio.h>
 #include <alloca.h>
-//#include <string.h>
 
 #include "list.h"
 #include "scanner.h"
@@ -17,16 +15,16 @@ list_append(list_t* list, node_t* n)
 		{
 			list->head = n;
 			list->last = n;
-			list->head->prev = NULL;
-			list->head->next = NULL;
-			list->last->prev = NULL;
-			list->last->next = NULL;
+			list->head->prev = nullptr;
+			list->head->next = nullptr;
+			list->last->prev = nullptr;
+			list->last->next = nullptr;
 			break;
 		}
 		case 1:
 		{
 			list->last = n;
-			list->last->next = NULL;
+			list->last->next = nullptr;
 			list->last->prev = list->head;
 			list->head->next = list->last;
 		}
@@ -37,7 +35,7 @@ list_append(list_t* list, node_t* n)
 			curr->next       = n;
 			list->last       = n;
 			list->last->prev = curr;
-			list->last->next = NULL;
+			list->last->next = nullptr;
 			break;
 		}
 	}
@@ -57,11 +55,11 @@ list_replace(list_t* list, node_t* p, list_t* in)
 	start->prev = before;
 	end->next = after;
 
-	if (before != NULL) {
+	if (before != nullptr) {
 		before->next = start;
 	}
 
-	if (after != NULL) {
+	if (after != nullptr) {
 		after->prev = end;
 	}
 
@@ -76,18 +74,6 @@ list_append_val(list_t* list, void* ptr)
 	n->ptr = ptr;
 
 	list_append(list, n);
-}
-
-node_t*
-list_head(list_t* l)
-{
-	return l->head;
-}
-
-node_t*
-list_prev(node_t* n)
-{
-	return n->prev;
 }
 
 node_t*

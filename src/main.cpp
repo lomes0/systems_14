@@ -12,7 +12,7 @@ main(int argc, const char* argv[])
 
     asm_runner(argv + 1, argc - 1, &l);
 
-    ret = log_has_fatal(&l) ? EXIT_FAILURE : EXIT_SUCCESS;
+    ret = log_has_errs(&l) ? EXIT_FAILURE : EXIT_SUCCESS;
 
     log_flush(&l);
 

@@ -19,3 +19,15 @@ macros_store(macros_t* m, str_t head_str, lines_t* body)
 {
 	btree_insert(m->table, head_str, body);
 }
+
+void
+macros_free(macros_t* m)
+{
+
+}
+
+macros_t*
+macros_create()
+{
+    return NULL;
+}

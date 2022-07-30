@@ -13,7 +13,7 @@ scanner_alloc(scanner_t* scanner, log_t* l)
 
     scanner->buffer = (char*)realloc(scanner->buffer, bytes_size + bytes_block_size);
 
-	if (scanner->buffer == NULL) {
+	if (scanner->buffer == nullptr) {
 		log_err(l, "scanner alloc failure.");
 		return RET_MEM_FAULT;
 	}
@@ -46,7 +46,7 @@ scanner_read_k(FILE* file, char* buffer, size_t bytes_max)
 	return byte_i;
 }
 
-static int
+static size_t
 scanner_read(scanner_t* s, int max)
 {
 	char* next_char_p = ((char*)s->buffer) + s->bytes_size;
@@ -70,7 +70,7 @@ scanner_next_line(scanner_t* s, str_t* str_p, log_t* l)
 {
 	ret_t ret;
 
-    str_p->c_str = NULL;
+    str_p->c_str = nullptr;
 	s->bytes_free = s->bytes_size;
 	s->bytes_size = 0;
 
@@ -131,7 +131,7 @@ scanner_init(scanner_t* s, const char* p, log_t* l)
 	s->bytes_size = 0;
 	s->bytes_free = 0;
 	s->file       = load_path(p, l);
-	s->buffer     = NULL;
+	s->buffer     = nullptr;
 }
 
 void

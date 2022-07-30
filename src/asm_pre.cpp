@@ -11,7 +11,7 @@ asm_pre_expend_macro(asm_pre_t* a, line_t* head)
 	line_t* line;
 	lines_t* body = macros_body(a->macros, line_word_i(head, 0));
 	
-	for (line = lines_first(body); line != NULL; line = line->next) {
+	for (line = lines_first(body); line != nullptr; line = line->next) {
 		lines_append(a->lines_out, line_copy(line));
 	}
 }
@@ -25,21 +25,21 @@ asm_pre_try_store_macro(asm_pre_t* a, line_t* head, log_t* l)
 
 	str_t head_str = line_word_i(head, 1);
 
-	/* forbid repeating macros. */
+	/* forbid multiple macro definitions. */
 	if (macros_has(a->macros, head_str)) {
 		lines_free(body);
 		log_err(l, "macro double definition [macro=%s]", head_str.c_str);
-		return NULL;
+		return nullptr;
 	}
 
-	while (next != NULL) {
+	while (next != nullptr) {
 		curr = next;
 
 		/* forbid nested macros. */
 		if (line_is_macro_def(curr)) {
 			log_err(l, "macro nested macro definition [macro=%s]", head_str.c_str);
 			lines_free(body);
-			return NULL;
+			return nullptr;
 		}
 
 		if (line_is_macro_end(curr)) {
@@ -54,7 +54,7 @@ asm_pre_try_store_macro(asm_pre_t* a, line_t* head, log_t* l)
 	lines_free(body);
 	log_err(l, "macro missing end statement [macro=%s]", head_str.c_str);
 
-	return NULL;
+	return nullptr;
 }
 
 void
@@ -63,21 +63,19 @@ asm_pre_sheldi(asm_pre_t* a, log_t* l)
 	line_t* line;
 	line_t* next = lines_first(a->lines);
 
-	while (next != NULL) {
+	while (next != nullptr) {
 		line = next;
 		
 		/* a known macro usage? */
-		if (line_is_single_word(line) &&
-            macros_has(a->macros, line_word_i(line, 0))) {
-
-			asm_pre_expend_macro(a, line);
-            next = next->next;
-			continue;
+		if (line_is_single_word(line)) {
+            if (macros_has(a->macros, line_word_i(line, 0))) {
+                asm_pre_expend_macro(a, line);
+                next = line->next;
+                continue;
+            }
 		}
-
 		/* a new macro definition? */
 		if (line_is_macro_def(line)) {
-
 			line = asm_pre_try_store_macro(a, line, l);
             next = line->next;
 			continue;
@@ -109,10 +107,7 @@ asm_pre_prepare_lines(asm_pre_t* a, list_t* lines_c, log_t* l)
 {
 	const char* line_c; node_t* lin_n;
 
-	a->lines = lines_create();
-	a->lines_out = lines_create();
-
-    for (lin_n = lines_c->head;  lin_n->next != NULL; lin_n = lin_n->next) {
+    for (lin_n = lines_c->head;  lin_n->next != nullptr; lin_n = lin_n->next) {
         line_c = (char*) lin_n->ptr;
 
 		line_t* line = asm_pre_create_line(a, line_c, l);
@@ -135,6 +130,10 @@ asm_pre_init(asm_pre_t* a, const char* p, log_t* l)
 
 	list_init(&lines_c);
 
+    a->lines = lines_create();
+    a->lines_out = lines_create();
+    a->macros = macros_create();
+
 	if (list_from_file(&lines_c, p, l) != RET_EOF) {
 		return -1;
 	}
@@ -147,7 +146,7 @@ asm_pre_init(asm_pre_t* a, const char* p, log_t* l)
 void
 asm_pre_free(asm_pre_t* a)
 {
-	//lines
-	//lines_out
-	//macros
+    lines_free(a->lines);
+    lines_free(a->lines_out);
+    macros_free(a->macros);
 }
