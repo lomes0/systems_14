@@ -1,5 +1,5 @@
-#ifndef __NODE__
-#define __NODE__
+#ifndef __NODEH__
+#define __NODEH__
 
 typedef struct node_d {
 	void* ptr;
@@ -10,4 +10,4 @@ typedef struct node_d {
 //void*
 //node_get_ptr(node_t* node);
 
-#endif /* __NODE__ */
+#endif /* __NODEH__ */
