@@ -12,8 +12,6 @@ typedef struct {
 
 void log_err(log_t* l, const char* fmt, ...);
 
-void log_warn(log_t* l, const char* fmt, ...);
-
 int log_has_errs(log_t* l);
 
 void log_flush(log_t* l);

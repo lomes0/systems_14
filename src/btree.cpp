@@ -81,3 +81,9 @@ btree_insert(btree_t* tree, str_t key, void* ptr)
 
 	bnode_insert(tree->root, key, ptr);
 }
+
+void
+btree_init(btree_t* tree)
+{
+    tree->root = NULL;
+}

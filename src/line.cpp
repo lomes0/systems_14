@@ -3,7 +3,6 @@
 #include <ctype.h>
 
 #include "line.h"
-#include "stdio.h"
 
 #define line_data(line, type) ((type) line->ptr);
 

@@ -9,7 +9,6 @@
 #include "common.h"
 
 typedef struct {
-
 	FILE* file;
 	char* buffer;
 	u_int32_t bytes_size;

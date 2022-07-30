@@ -23,12 +23,6 @@ list_replace(list_t* list, node_t* p, list_t* in);
 node_t*
 list_next(node_t* n);
 
-//node_t*
-//list_get_head(list_t* list);
-
-//node_t*
-//list_get_last(list_t* list);
-
 ret_t
 list_from_file(list_t* list, const char* p, log_t* l);
 

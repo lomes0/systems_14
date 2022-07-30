@@ -20,4 +20,6 @@ void* btree_get(btree_t* tree, str_t key);
 
 void btree_insert(btree_t* tree, str_t key, void* ptr);
 
+void btree_init(btree_t* tree);
+
 #endif /* __BTRREH__ */

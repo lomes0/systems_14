@@ -25,9 +25,9 @@ int line_is_single_word(line_t* line);
 
 str_t line_word_i(line_t* line, int i);
 	
-line_t* line_copy(line_t* orig);
+line_t* line_copy(line_t* line);
 
-line_t* line_create(str_t* strs, int seg_num);
+line_t* line_create(str_t* strs, int size);
 
 void line_free(line_t* line);
 
