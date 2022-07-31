@@ -32,4 +32,4 @@ list_free(list_t* l);
 void
 list_init(list_t* l);
 
-#endif /*__LIST__*/
+#endif /* __LIST__ */
